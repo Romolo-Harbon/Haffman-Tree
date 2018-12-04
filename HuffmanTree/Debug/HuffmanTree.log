@@ -1,0 +1,4 @@
+﻿  pch.cpp
+  HuffmanTree.cpp
+d:\download\users\moeugeo\documents\apps\compiler\vs2017\projects\huffmantree\huffmantree\huffmantree\huffmantree.cpp(12): error C2059: 语法错误:“]”
+d:\download\users\moeugeo\documents\apps\compiler\vs2017\projects\huffmantree\huffmantree\huffmantree\huffmantree.cpp(25): error C2448: “sort”: 函数样式初始值设定项类似函数定义
