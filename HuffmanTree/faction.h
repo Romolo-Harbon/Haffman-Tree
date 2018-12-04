@@ -36,32 +36,25 @@ void creatHaffCode(HaffNode HaffTree[])
 	{
 		if (i == HaffTree[HaffTree[i].parent].leftChild)
 		{
-			for (int k = 0; HaffTree[HaffTree[i].parent].code[k] != '\0' && HaffTree[HaffTree[i].parent].code[k] != ' '; k++)
+			if(HaffTree[HaffTree[i].parent].code[0] != '\0'||HaffTree[HaffTree[i].parent].code[0]!=' ')		//for (int k = 0; HaffTree[HaffTree[i].parent].code[k] != '\0' && HaffTree[HaffTree[i].parent].code[k] != ' '; k++) { HaffTree[i].code[k] = HaffTree[HaffTree[i].parent].code[k];	}
 			{
-					strcpy(HaffTree[i].code, HaffTree[HaffTree[i].parent].code);			//取双亲的哈夫曼编码
-//					HaffTree[i].code[k] = HaffTree[HaffTree[i].parent].code[k];			
-			}
-			if (HaffTree[i].code[0] == '\0')												//如果双亲的哈夫曼编码为空串则运行
-				HaffTree[i].code[0] = '0';
-			else
-			{
-				HaffTree[i].code_len = strlen(HaffTree[i].code);							//如果双亲的哈夫曼编码不为空则运行
+				strcpy(HaffTree[i].code, HaffTree[HaffTree[i].parent].code);				//取双亲的哈夫曼编码
+				HaffTree[i].code_len = strlen(HaffTree[i].code);							//计算自身的哈夫曼编码长度（此时计算的为双亲的哈夫曼编码长度）
 				HaffTree[i].code[HaffTree[i].code_len] = '0';								//在双亲的哈夫曼编码后加 '0'（因为是左孩子）
 			}
+			else 										//if(HaffTree[i].code[0] == '\0')		//如果双亲的哈夫曼编码为空串则运行
+				HaffTree[i].code[0] = '0';
 		}
 		else
 		{
-			for (int k = 0; HaffTree[HaffTree[i].parent].code[k] != '\0' && HaffTree[HaffTree[i].parent].code[k] != ' '; k++)
+			if(HaffTree[HaffTree[i].parent].code[0] != '\0'||HaffTree[HaffTree[i].parent].code[0]!=' ')	
 			{
 				strcpy(HaffTree[i].code, HaffTree[HaffTree[i].parent].code);
-			}
-			if (HaffTree[i].code[0] == '\0')
-				HaffTree[i].code[0] = '1';
-			else
-			{
 				HaffTree[i].code_len = strlen(HaffTree[i].code);
-				HaffTree[i].code[HaffTree[i].code_len] = '1';
+				HaffTree[i].code[HaffTree[i].code_len] = '1';	
 			}
+			else										//if (HaffTree[i].code[0] == '\0')
+				HaffTree[i].code[0] = '1';
 		}
 	}
 }
@@ -138,8 +131,9 @@ void writeCompressFile()
 	ofstream ofp;
 	char *temp,c;														//temp用来指向文件名中'.'以及其后面的字符,c用来存储从ifp文件中读取到的字符
 	int len;															//len用来记录文件后缀名的长度
-	ifp.open(source_filename,ios::binary);								//以读的方式打开二进制源文件ifp
-	ofp.open(compress_filename,ios::binary);							//以写的方式打开二进制压缩文件ofp
+	Statistics(source_filename,HaffTree);
+//	ifp.open(source_filename,ios::binary);								//以读的方式打开二进制源文件ifp（即源文件），如需要可直接调用Statistics()函数
+	ofp.open(compress_filename,ios::binary);							//以写的方式打开二进制压缩文件ofp（即压缩文件）
 	temp = strrchr(source_filename,'.');
 	if(temp)
 	{
@@ -148,5 +142,5 @@ void writeCompressFile()
 	}
 	strcpy(suffix_filename,temp);										//suffix_filename为后缀名
 	len = strlen(suffix_filename);										//len为后缀长度
-
+	ofp<<len<<','<<temp<<','<<file_lenght<<','<<bytes_count<<',';		//未完成
 }
