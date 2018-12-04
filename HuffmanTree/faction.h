@@ -11,7 +11,7 @@ bool compare (HaffNode a,HaffNode b)
 	return a.weight>b.weight;
 }
 //初始化哈夫曼树
-void initHaffTree()
+void initHaffTree(HaffNode HaffTree[])
 {	
 	int i=0;
 	for(i=0;i<=510;i++)
@@ -25,7 +25,7 @@ void initHaffTree()
 	}
 }
 //构造哈夫曼编码
-void creatHaffCode()
+void creatHaffCode(HaffNode HaffTree[])
 {
 	if (NULL == HaffTree)																	//如果树为空则直接返回
 		return;
@@ -66,8 +66,8 @@ void creatHaffCode()
 		}
 	}
 }
-//读取源文件，统计源文件中字节出现次数(while函数的判断条件不确定是否需要更改，可能会少判断一次或多判断一次)
-void Statistics(char fileName[])
+//读取源文件，统计源文件中字节出现次数(while函数的判断条件不确定是否需要更改，可能会少判断一次或多判断一次)（需要传两个参数，分别为文件的名称和结构体数组）
+void Statistics(char fileName[],HaffNode HaffTree[])
 {
 	ifstream file;
 	file.open(source_filename,ios::binary);
@@ -94,11 +94,11 @@ void HaffTreesort()
 {
 	sort(HaffTree,HaffTree+511,compare);
 }
-//构造哈夫曼树(未完成)
-void creatHaffTree()
+//构造哈夫曼树(未完成,降序还未实现)
+void creatHaffTree(HaffNode HaffTree[])
 {
 	int tempweight1,tempweight2,min1,min2;
-	initHaffTree();
+	initHaffTree(HaffTree);															//直接传结构体数组
 //	降序排序与统计源文件中字节的出现次数（文档没有要求,但排序完以后下面的合并才能确定合并后新的结点存放在哪）
 //	求哈夫曼树叶子结点树bytes_count；
 	 for(int i=1;i<bytes_count;i++)	//经过bytes_count -1 次树的合并。
@@ -133,8 +133,12 @@ void creatHaffTree()
 //生成压缩文件(未完成,与文档格式不一样，应该需要更改)
 void writeCompressFile()
 {
+	ifstream ifp;
+	ofstream ofp;
 	char *temp;															//temp用来指向文件名中'.'以及其后面的字符
 	int len;															//len用来记录文件后缀名的长度
+	ifp.open(source_filename,ios::binary);
+	ofp.open(compress_filename,ios::binary);
 	temp = strrchr(source_filename,'.');
 	if(temp)
 	{
@@ -143,4 +147,5 @@ void writeCompressFile()
 	}
 	strcpy(suffix_filename,temp);										//suffix_filename为后缀名
 	len = strlen(suffix_filename);										//len为后缀长度
+
 }
