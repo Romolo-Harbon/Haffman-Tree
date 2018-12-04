@@ -16,7 +16,7 @@ void initHaffTree(HaffNode HaffTree[])
 	int i=0;
 	for(i=0;i<=510;i++)
 	{
-		HaffTree[i].byte=(unsigned char)i;
+		HaffTree[i].byte=i;
 		HaffTree[i].weight=0;
 		HaffTree[i].leftChild=-1;
 		HaffTree[i].rightChild=-1;
@@ -32,7 +32,6 @@ void creatHaffCode(HaffNode HaffTree[])
 	int root = 0, i = 0;
 	root = bytes_count * 2 - 2;	
 	HaffTree[root].code[0] = '\0';
-
 	for (i = root - 1; i >= 0; i--)
 	{
 		if (i == HaffTree[HaffTree[i].parent].leftChild)
@@ -70,19 +69,21 @@ void creatHaffCode(HaffNode HaffTree[])
 void Statistics(char fileName[],HaffNode HaffTree[])
 {
 	ifstream file;
-	file.open(source_filename,ios::binary);
+	file.open(fileName,ios::binary);
 	if(!file)
 	{
 		cout << "打开文件失败" << endl;
 		exit(0);
 	}
 	char t;
-	while(file>>t)					//EOF!=file.peek() 待定判断条件
+	file>>t;
+	while(!file.eof()&&t!=EOF/*判断文件是否结束*/)
 	{
 		HaffTree[t].weight++;
 		file_lenght++;
+		file>>t;
 	}
-	for(int i=0;i<511;i++)
+	for(int i=0;i<255;i++)
 	{
 		if(HaffTree[i].weight!=0)
 			bytes_count++;
@@ -98,7 +99,7 @@ void HaffTreesort()
 void creatHaffTree(HaffNode HaffTree[])
 {
 	int tempweight1,tempweight2,min1,min2;
-	initHaffTree(HaffTree);															//直接传结构体数组
+	initHaffTree(HaffTree);																	//直接传结构体数组
 //	降序排序与统计源文件中字节的出现次数（文档没有要求,但排序完以后下面的合并才能确定合并后新的结点存放在哪）
 //	求哈夫曼树叶子结点树bytes_count；
 	 for(int i=1;i<bytes_count;i++)	//经过bytes_count -1 次树的合并。
@@ -135,10 +136,10 @@ void writeCompressFile()
 {
 	ifstream ifp;
 	ofstream ofp;
-	char *temp;															//temp用来指向文件名中'.'以及其后面的字符
+	char *temp,c;														//temp用来指向文件名中'.'以及其后面的字符,c用来存储从ifp文件中读取到的字符
 	int len;															//len用来记录文件后缀名的长度
-	ifp.open(source_filename,ios::binary);
-	ofp.open(compress_filename,ios::binary);
+	ifp.open(source_filename,ios::binary);								//以读的方式打开二进制源文件ifp
+	ofp.open(compress_filename,ios::binary);							//以写的方式打开二进制压缩文件ofp
 	temp = strrchr(source_filename,'.');
 	if(temp)
 	{
