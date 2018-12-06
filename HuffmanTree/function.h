@@ -131,8 +131,8 @@ void writeCompressFile(HaffNode HaffTree[])
 	ofstream ofp;
 	char *temp, c;																	//temp用来指向文件名中'.'以及其后面的字符,c用来存储从ifp文件中读取到的字符
 	int len;																		//len用来记录文件后缀名的长度
-	if(bytes_count==0&&file_lenght)	Statistics(source_filename, HaffTree);			//bytes_count（叶子节点）和file_lenght（文件字节数）为0时再调用读取源文件的函数，防止对这两个数再次进行累加，使数值翻倍
-	//	ifp.open(source_filename,ios::binary);										//以读的方式打开二进制源文件ifp（即源文件），如需要可直接调用Statistics()函数
+	if (bytes_count == 0 && file_lenght == 0)	Statistics(source_filename, HaffTree);			//bytes_count（叶子节点）和file_lenght（文件字节数）为0时再调用读取源文件的函数，防止对这两个数再次进行累加，使数值翻倍
+	ifp.open(source_filename,ios::binary);											//以读的方式打开二进制源文件ifp（即源文件）
 	ofp.open(compress_filename, ios::binary);										//以写的方式打开二进制压缩文件ofp（即压缩文件）
 	temp = strrchr(source_filename, '.');
 	if (temp)
@@ -145,4 +145,5 @@ void writeCompressFile(HaffNode HaffTree[])
 	ofp << len << ',' << *temp << ',' << file_lenght << ',' << bytes_count ;		//可能需要更改
 	for (int i = 0; i < bytes_count - 1; i++)
 		ofp << ',' << HaffTree[i].byte << ',' << HaffTree[i].weight;				//输入被编码的字节并统计出现次数
+
 }
